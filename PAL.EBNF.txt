@@ -1,0 +1,81 @@
+// An EBNF for PAL (Pretty Auful Language).
+//
+// (c) 2008, 2011 Allan C. Milne
+// (c) 2017, 2018 Adam Sampson
+//
+// Written in version 3 of EBNF.
+//
+// The comments in this specification give an informal description of
+// the semantics of the language.
+//
+// The PAL language is case-sensitive and free-format.
+// The scope of all declared identifiers is the entire program.
+// PAL is strictly typed, with no implicit conversion between integers
+// and reals (even in constants, i.e. "42" is not a valid REAL constant).
+
+// The Identifier supplied as the program name is not used for any
+// semantic purpose.
+<Program> ::= PROGRAM Identifier
+              WITH <VarDecls> 
+              IN (<Statement>)+
+              END ;
+
+// All variable names in declarations must be unique within a scope.
+// All variable names used in other PAL constructs must have been
+// declared in the WITH block.
+// Variables are implicitly initialised to 0 or 0.0.
+<VarDecls> ::= (<IdentList> AS <Type>)* ;
+
+<Type> ::= REAL | INTEGER ;
+
+<Statement> ::= <Assignment> | <Loop> | <Conditional> | <I-o> ;
+
+// Evaluate the <Expression> and store the result value in the
+// existing variable named by Identifier. The variable and <Expression>
+// must be of the same type.
+<Assignment> ::= Identifier = <Expression> ;
+
+// If <BooleanExpr> is true, skip to the statement following the
+// ENDLOOP, otherwise execute the statements and repeat.
+<Loop> ::= UNTIL <BooleanExpr> REPEAT (<Statement>)* ENDLOOP ;
+
+// If <BooleanExpr> is true, execute the block after the THEN.
+// If <BooleanExpr> is false, execute the block after the ELSE
+// (or do nothing, if there is no ELSE clause).
+<Conditional> ::= IF <BooleanExpr> THEN (<Statement>)*
+                      ( ELSE (<Statement>)* )? 
+                      ENDIF ;
+
+// Actual physical I/O depends on the operation of the available
+// target execution platform I/O instructions (e.g. INPUT might read
+// from standard input, and OUTPUT write to standard output).
+// INPUT's argument must be an existing variable.
+// Items in the lists may be of different types (e.g. you can
+// "OUTPUT 42, 3.7, 1234" or "INPUT someInt, someReal").
+<I-o> ::= INPUT <IdentList> | 
+          OUTPUT <Expression> ( , <Expression>)* ;
+
+// Operator precedence is implicitly defined via this syntax.
+// All elements of an expression must be of the same type.
+<Expression> ::= <Term> ( (+|-) <Term>)* ;
+
+<Term> ::= <Factor> ( (*|/) <Factor>)* ;
+
+// Note optional unary operators.
+<Factor> ::= (+|-)? ( <Value> | "(" <Expression> ")" ) ;
+
+<Value> ::= Identifier | IntegerValue | RealValue ;
+
+// Both sides of the Boolean expression must be of the same type.
+// Evaluates to a true/false value.
+<BooleanExpr> ::= <Expression> ("<" | "=" | ">") <Expression> ;
+
+<IdentList> ::= Identifier ( , Identifier)* ;
+
+
+microsyntax 
+// Uses .NET regular expression syntax.
+
+Identifier   <|[a-zA-Z]\w*
+RealValue    <|\d+\.\d*
+IntegerValue <|\d+

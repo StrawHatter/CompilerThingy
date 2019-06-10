@@ -1,0 +1,228 @@
+<html>
+<head>
+<title>Assessment - Languages and Compilers</title>
+<style type="text/css">
+body, h1, h2, h3, p, ul { padding: 0; }
+body {
+    background: white;
+    color: black;
+    max-width: 40em;
+    font: 12pt/1.2 "Liberation Serif", serif;
+    margin: 12pt;
+}
+h1 {
+    margin: 12pt 0;
+    font-size: 24pt;
+}
+h2 {
+    margin: 12pt 0 0 0;
+    font-size: 16pt;
+}
+h3 { font-size: 14pt; }
+h1, h2, h3 { font-weight: bold; }
+.module { font-weight: normal; }
+.author, h2, h3 { font-family: "Liberation Sans", sans-serif; }
+.author {
+    margin: 12pt 0;
+    font-size: 16pt;
+}
+.affil { font-size: 12pt; }
+p, ul {
+    margin: 6pt 0;
+}
+li {
+    margin: 6pt 0 6pt 20pt;
+}
+</style>
+<body>
+
+<h1><span class="module">Languages and Compilers</span><br>
+Assessment</h1>
+
+<p class="author">Adam Sampson<br>
+<span class="affil">School of Design and Informatics</span></p>
+
+<h2>Introduction</h2>
+<p>This document defines an assessment in which you are required to develop
+a partial compiler for the language <strong>PAL</strong> (Pretty Awful Language).
+You will only be building the <strong>frontend</strong> of the compiler: you need to
+implement parsing and semantic analysis, but you don't need to implement
+artifact generation.</p>
+<p>Please read through the whole of this document carefully before starting
+work, including the <strong>Submission</strong> and <strong>Grading Criteria</strong> sections.
+It's important to note that a detailed assessment of your code will
+not be made; your work is assessed through the correctness of the
+compiler's operation and the quality of your report describing an aspect
+of the compiler's operation.</p>
+<p>If you have any questions, please contact me
+(<strong>a.sampson@abertay.ac.uk</strong>).</p>
+<h2>Software Requirements</h2>
+<p>The overall objective of this assignment is to develop a parser and
+semantic analyser for the language <strong>PAL</strong>, encapsulated within a
+command-line application that will enable a user to process a PAL
+program to verify its <strong>syntactic</strong> and <strong>semantic</strong> correctness.</p>
+<p>Your primary source document for this is 
+<a href="PAL.EBNF.txt">the EBNF specification of PAL</a>,
+which includes commentary on the semantics of the language.</p>
+<p>I will run your compiler application inside an automated test harness
+when marking it, so you need to keep the compiler's interface very
+simple:</p>
+<ul>
+<li>Your compiler application must take the name of the PAL program file
+  as its only command-line argument (i.e. in C#, the first element of
+  the array of arguments passed to <code>Main</code>).</li>
+<li>Error messages should be printed to standard output, with the compiler
+  <strong>printing nothing</strong> if the PAL program is correct.</li>
+<li>The compiler must not expect any user input other than the
+  command-line arguments, or display a GUI.</li>
+</ul>
+<p>I strongly suggest that you use C# and the Ardkit framework &mdash;
+which we used in previous practicals &mdash; to implement your compiler.
+If you'd like to use a different language or framework, I'm happy for
+you to do so, but you <strong>must</strong> contact me by email to confirm that it'll
+meet the assessment requirements before starting work.</p>
+<p>I've provided a pre-written scanner for PAL for you to use as the basis
+for your compiler; here is the
+<a href="PALScanner.cs">PALScanner.cs source file</a> and (for reference)
+<a href="PAL.FSM.txt">the FSM that it implements</a>.
+This source file is complete; please don't modify it in any way.</p>
+<h2>Suggested Activities</h2>
+<p>Following is a methodology that you can follow in developing your
+compiler.
+This process will enable you to build up your application step by step,
+testing each stage as it is completed so that you know the next step is
+being built on a sound foundation:</p>
+<ol>
+<li>Review the <a href="PAL.EBNF.txt">EBNF specification for PAL</a>, noting the
+   different forms that the declarations and statements can take.</li>
+<li>Write some programs in the language, to check your understanding
+   of the syntax and to act as test programs for the compiler as it is
+   developed.</li>
+<li>Download the C# scanner file that has been provided.</li>
+<li>Ensure you know how to use the Ardkit framework classes by referring
+   back to previous lectures, practicals and examples; ask if you are in
+   doubt.</li>
+<li>Develop a "pure" recursive-descent parser for PAL.  This will be
+   defined as a class inheriting from the <code>RecoveringRdParser</code> class in
+   the Ardkit compiler toolkit library.</li>
+<li>Write the main application that will instantiate the parser and
+   provide an appropriate command-line interface.</li>
+<li>Test your "pure" parser by running your application against a suite
+   of test programs (which you'll need to write).
+   Your testing should ensure that valid programs are verified as such,
+   and that <strong>syntactically invalid</strong> programs have their errors
+   reported correctly.</li>
+<li>Add semantic analysis to the parser.
+   This will involve developing a semantic analysis class and symbol
+   table mechanism, based around the Ardkit compiler toolkit framework.
+   Ardkit includes a range of error classes that should be sufficient
+   for most projects; you can also add new error classes if you feel you
+   need them.</li>
+<li>Test that semantic analysis works correctly by again running your
+   application against a suite of test programs.
+   This should include valid programs and programs that are
+   syntactically valid but <strong>semantically invalid</strong>.</li>
+</ol>
+<p>You should now have a complete and correct parser and semantic analyser
+for the PAL language.</p>
+<h2>Report Requirements</h2>
+<p>Your submission is assessed by the correctness of the operation of your
+compiler and the quality of your report.
+The report must include the following sections:</p>
+<ul>
+<li>Your name and student number.</li>
+<li>A summary of how complete your compiler implementation is in terms of
+  parsing and semantic analysis.
+  This should include information on why you have confidence in your
+  statement of completeness (e.g. how you've tested the compiler).</li>
+<li>A detailed explanation of the operation of your syntactic and semantic
+  analysis for <code>VarDecls</code>.</li>
+</ul>
+<p>I expect the report to be about three sides of A4 for a typical project.
+(If you feel you need to write much more than this, please contact me!)</p>
+<p>In explaining how your analysis operates you should include how the
+input is parsed/scanned and the way in which the corresponding semantic
+analysis is carried out. 
+This description should make reference to specific extracts from your
+own code to illustrate your explanation of what is going on and why.</p>
+<p>As indicated in the <strong>Grading Criteria</strong> section, the maximum grade
+available depends on the extent to which your compiler completes both
+parsing and semantic analysis phases; within that, the quality of your
+report in terms of its accuracy, completeness, insight and appraisal
+will determine the actual grade awarded.
+Your report should be in terms of what you have actually completed.</p>
+<h2>Submission</h2>
+<p>You must submit a ZIP file containing the following:</p>
+<ul>
+<li>An electronic copy of the report as a PDF document.</li>
+<li>The compiled <code>.exe</code> of your PAL compiler, that I can run against my
+  own test suite of sample PAL programs.</li>
+<li>The complete source code for your compiler.</li>
+<li>Your test suite of valid and invalid PAL programs.</li>
+</ul>
+<p>Your ZIP file must be submitted by <strong>23:59 on Tuesday 30th April</strong>,
+using CMP409's "Submit Module Assessment" page on Blackboard.</p>
+<p>Feedback will be available on Tuesday 21st May (15 working days after
+submission).</p>
+<h2>Grading Criteria</h2>
+<p>The coursework will be assessed using the following criteria;</p>
+<ul>
+<li>The correctness and completeness of your application when executed
+  against a suite of test PAL programs, and</li>
+<li>the quality of the report in terms of its accuracy, completeness,
+  appraisal, explanations and insight.</li>
+</ul>
+<p>The <strong>maximum</strong> grade that can be achieved under both criteria depends
+on the extent to which you have completed and reported on the compiler
+in terms of both parsing and semantic analysis.</p>
+<table>
+<thead>
+<tr>
+<th align="center">Maximum Grade</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">A</td>
+<td>The application fully and correctly implements parsing and semantic analysis.</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td>Parsing and semantic analysis are fully implemented but with some minor errors in either or both.</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td>Parsing is implemented (perhaps with some minor errors) but semantic analysis has major omissions or errors.</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td>Parsing is implemented (perhaps with some major omissions or errors) but with little or no semantic analysis.</td>
+</tr>
+<tr>
+<td align="center">MF</td>
+<td>The submission could meet the minimum D standard with some more work under minimal direction.</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td>Substantial work and direction would be required to bring the submission up to the minimum D standard.</td>
+</tr>
+<tr>
+<td align="center">NS</td>
+<td>No submission, or the submission contained no relevant material.</td>
+</tr>
+</tbody>
+</table>
+<p>The above maximum grades will be awarded if the accompanying report satisfies the following criteria.</p>
+<ul>
+<li>The report accurately reflects the completeness of the compiler,
+  including supporting evidence. </li>
+<li>The report accurately describes and explains fully the operation
+  of the syntactic and semantic processing in the <code>VarDecls</code>
+  recogniser method.</li>
+<li>The report includes critical appraisal and evidence of insight in its
+  commentary on completeness and operation. </li>
+</ul>
+<p>Grades below the maximum grade will be awarded to reflect a relatively
+poorer quality of implementation and report.</p></body>
+</html>

@@ -1,0 +1,21 @@
+PROGRAM test
+WITH 
+a, b AS INTEGER
+c, d AS REAL
+IN
+a = 1
+b = a + 1
+c = 1.0
+d = c - 1.0 + 5.0 * 2.5
+UNTIL e > 10
+REPEAT a = a * 2
+ENDLOOP
+IF c = 10.0
+THEN d = 5.0
+ELSE d = 2.0
+ENDIF
+INPUT a,b
+OUTPUT c + 1.0, d / 5.0
+END
+
+

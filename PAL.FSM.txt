@@ -1,0 +1,44 @@
+An FSM for PAL language tokens.
+================================
+
+|n|  indicates a final state.
+<==+ indicates a looping transition.
+...  indicates any character not explicitly
+     defined for other transitions from the state.
+
+
+   0 <==+ whitespace
+   |
+   |
+   |
+   | a-z A-Z                            Following id's are keywords:
+   +----------> |1| <==+ a-z A-Z 0-9       PROGRAM, WITH, IN, END, AS, INTEGER, REAL, 
+   |           Identifier                       UNTIL, REPEAT, ENDLOOP, IF, THEN, ELSE, ENDIF,
+   |                                      INPUT, OUTPUT
+   |
+   |  0-9    IntegerValue
+   +----------> |2| <==+ 0-9
+   |           |
+   |           | .
+   |           |
+   |           V
+   |          |3| <==+ 0-9
+   |        RealValue
+   |
+   |
+   | + - * / ( ) ,= < > 
+   +--------------------> |4| 
+   |                      single char punctuation
+   |
+   |
+   |  EOF
+   +-------> |98|
+   |         eof
+   |...
+   |
+   V
+  |99|
+  invalid-char
+
+
+(c) Allan c. Milne; 2006, 14 April 2011.
